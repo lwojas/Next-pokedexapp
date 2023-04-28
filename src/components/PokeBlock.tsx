@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Link from "next/link";
 
 import { pokeHash } from "@/libs/cache";
 
@@ -22,7 +23,7 @@ const PokeBlock = (props: pokeProps) => {
 
   useEffect(() => {
     if (!pokeHash[props.name]) {
-      console.log("Api caller in pokemon block");
+      //   console.log("Api caller in pokemon block");
       getDetails();
     } else {
       setpokeDetails(pokeHash[props.name]);
@@ -31,19 +32,21 @@ const PokeBlock = (props: pokeProps) => {
 
   return (
     <>
-      <div>
-        {pokeDetails ? (
-          <img
-            alt="Pokemon"
-            src={pokeDetails.sprites.other["official-artwork"].front_default}
-          />
-        ) : (
-          "Loading image"
-        )}
-        <div className="card-detail">
-          <h3>{props.name}</h3>
+      <Link href={"/detail/" + props.name}>
+        <div>
+          {pokeDetails ? (
+            <img
+              alt="Pokemon"
+              src={pokeDetails.sprites.other["official-artwork"].front_default}
+            />
+          ) : (
+            "Loading image"
+          )}
+          <div className="card-detail">
+            <h3>{props.name}</h3>
+          </div>
         </div>
-      </div>
+      </Link>
     </>
   );
 };

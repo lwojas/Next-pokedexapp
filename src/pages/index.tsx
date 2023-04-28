@@ -1,12 +1,16 @@
+// Library import
 import axios from "axios";
 import { useState } from "react";
+import { Inter } from "next/font/google";
 
+// Component import
 import Logo from "@/components/Logo";
 import PokeBlock from "@/components/PokeBlock";
+import Filter from "@/components/Filter";
 
+// Local import
 import { stateCache, pokeHash } from "@/libs/cache";
-import CreateID from "@/libs/createID";
-import { Inter } from "next/font/google";
+import CreateID from "@/libs/uuid";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,11 +35,27 @@ export async function getStaticProps() {
 }
 
 export default function Home(props: globalProps) {
+  const [pokeList, setPokeList] = useState<any>(props.resData);
+  const [backupList, setBackupList] = useState<any>(props.resData);
+
+  const startFilter = (query: string) => {
+    if (pokeList) {
+      const filterList = backupList.filter((item: any) => {
+        if (item.name.startsWith(query)) {
+          console.log(item);
+          return item;
+        }
+      });
+      setPokeList(filterList);
+    }
+  };
+
   return (
     <div className="poster-wrapper">
       <Logo />
+      <Filter callBack={startFilter} />
       <div className="flex-row poke-list">
-        {props.resData.map((pokemon: any, index: number) => {
+        {pokeList.map((pokemon: any, index: number) => {
           return (
             <PokeBlock key={CreateID()} name={pokemon.name} url={pokemon.url} />
           );
