@@ -18,6 +18,12 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "src/libs/cache.js"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/libs/cache.js",
+    "src/pages/detail/[name].jsx"
+  ],
   "exclude": ["node_modules"]
 }

@@ -9,10 +9,22 @@ import PokeBlock from "@/components/PokeBlock";
 import Filter from "@/components/Filter";
 
 // Local import
-import { stateCache, pokeHash } from "@/libs/cache";
+import { stateCache } from "@/libs/cache";
 import CreateID from "@/libs/uuid";
 
 const inter = Inter({ subsets: ["latin"] });
+
+export async function getStaticProps() {
+  const res = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=300");
+  const resData = res.data.results;
+  // Cache the results
+  stateCache.homeState = resData;
+  return {
+    props: {
+      resData,
+    },
+  };
+}
 
 type globalProps = {
   resData: {
@@ -20,19 +32,6 @@ type globalProps = {
     url: string;
   }[];
 };
-
-export async function getStaticProps() {
-  const res = await axios.get("https://pokeapi.co/api/v2/pokemon?limit=300");
-  const resData = res.data.results;
-  // Cache the results
-  stateCache.homeState = resData;
-
-  return {
-    props: {
-      resData,
-    },
-  };
-}
 
 export default function Home(props: globalProps) {
   const [pokeList, setPokeList] = useState<any>(props.resData);
@@ -42,14 +41,13 @@ export default function Home(props: globalProps) {
     if (pokeList) {
       const filterList = backupList.filter((item: any) => {
         if (item.name.startsWith(query)) {
-          console.log(item);
+          // console.log(item);
           return item;
         }
       });
       setPokeList(filterList);
     }
   };
-
   return (
     <div className="poster-wrapper">
       <Logo />
@@ -57,6 +55,7 @@ export default function Home(props: globalProps) {
       <div className="flex-row poke-list">
         {pokeList.map((pokemon: any, index: number) => {
           return (
+            // Generate a unique ID for the key so we can filter the list without conflicts
             <PokeBlock key={CreateID()} name={pokemon.name} url={pokemon.url} />
           );
         })}

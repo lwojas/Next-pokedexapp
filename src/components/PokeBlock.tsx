@@ -32,7 +32,7 @@ const PokeBlock = (props: pokeProps) => {
 
   return (
     <>
-      <Link href={"/detail/" + props.name}>
+      <Link className="flex-child" href={"/detail/" + props.name}>
         <div>
           {pokeDetails ? (
             <img
